@@ -7,6 +7,9 @@ function App() {
   const [count, setCount] = useState(0)
   const [cards, setCards] = useState(null)
 
+  const [selectedTerm, setSelectedTerm] = useState(null)
+  const [selectedDefinition, setSelectedDefinition] = useState(null)
+
   
   useEffect(() => {
     async function fetchCards() {
@@ -27,14 +30,38 @@ function App() {
     fetchCards()
   }, [])
 
+  function handleTermClick(e){
+    console.log('Term clicked:', e)
+    console.log('Term id', e.target.classList[1])
+    setSelectedTerm(e.target.classList[1])
+  }
+
+  function handleDefinitionClick(e){
+    console.log('Definition clicked:', e)
+    console.log('Definition id', e.target.classList[1])
+    setSelectedDefinition(e.target.classList[1])
+  }
+
+  if (selectedDefinition != null && selectedTerm != null){
+    if (selectedDefinition == selectedTerm){
+      console.log("It's a match!")
+    } else {
+      console.log('Not a match!')
+    }
+    setSelectedDefinition(null)
+    setSelectedTerm(null)
+  }
+
   return (
     <>
+    <h1>Match the terms and definitons</h1>
+    <div className='cards'>
       {cards ? (
         cards.length > 0 ? (
           cards.map((card, index) => (
             <>
-              <p key={index} className='term'>{card.term}</p>
-              <p key={index} className='definition'>{card.definition}</p>
+              <p className={`term ${card._id}`} onClick={handleTermClick}>{card.term}</p>
+              <p className={`definition ${card._id}`} onClick={handleDefinitionClick}>{card.definition}</p>
             </>
           ))
     ) : (
@@ -43,6 +70,7 @@ function App() {
   ) : (
       <p>Loading...</p>
     )}
+    </div>
     </>
   )
 }
